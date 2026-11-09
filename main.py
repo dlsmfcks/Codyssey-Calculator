@@ -58,7 +58,7 @@ def check_matrix(matrix, size, name):
     return [[float(v) for v in row] for row in matrix]
 
 
-def normalize(label):
+def normalize_label(label):
     labels = {"+": "Cross", "cross": "Cross", "x": "X"}
     if isinstance(label, str) and label.strip().lower() in labels:
         return labels[label.strip().lower()]
@@ -76,7 +76,7 @@ def load_filters(raw, size):
     filters = {}
 
     for key, matrix in group.items():
-        label = normalize(key)
+        label = normalize_label(key)
 
         if label in filters:
             raise ValueError(f"{label} 필터가 중복되었습니다.")
@@ -100,7 +100,7 @@ def analyze_case(key, case, filters, filter_errors):
         raise ValueError("패턴에 input과 expected가 필요합니다.")
         
     pattern = check_matrix(case["input"], size, "패턴")
-    expected = normalize(case["expected"])
+    expected = normalize_label(case["expected"])
     cross = mac(pattern, filters[size]["Cross"])
     x = mac(pattern, filters[size]["X"])
     result = decide(cross, x, "Cross", "X")
